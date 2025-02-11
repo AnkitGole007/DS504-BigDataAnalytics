@@ -1,29 +1,50 @@
-DS504/CS586 - Big Data Analytics - Spring 2020
-This repository contains projects and assignments from the DS504/CS586 - Big Data Analytics course at Worcester Polytechnic Institute (WPI) during the Spring 2020 semester. The course, instructed by Prof. Yanhua Li, focuses on computational techniques and algorithms for measuring, analyzing, and mining patterns in large-scale datasets.
+# DS504/CS586 - Big Data Analytics - Spring 2025
 
-Course Topics:
+This repository contains projects, assignments, and notes from the **DS504/CS586—Big Data Analytics** course at Worcester Polytechnic Institute (WPI), which Prof. Yanhua Li instructed during the Spring 2020 semester.
 
-Large-scale data sampling and estimation
-Data cleaning and management
-Clustering techniques
-Real-world applications such as urban computing, social media analysis, and recommender systems
-Course Structure:
+## 📌 Course Overview
 
-The course includes four individual projects and a final team project, each exploring different aspects of big data analytics.
+The course focuses on computational techniques and algorithms for measuring, analyzing, and mining patterns in large-scale datasets. It covers key big data concepts and real-world applications in areas such as urban computing, social media analysis, and recommender systems.
 
-Instructor:
+### 🔍 Topics Covered
+- Large-scale data sampling and estimation
+- Data cleaning and management
+- Clustering techniques and pattern recognition
+- Advanced machine learning techniques for big data
+- Applications in urban computing, social media, and recommender systems
 
-Prof. Yanhua Li
-Office: AK130
-Email: yli15@wpi.edu
-Website: http://wpi.edu/~yli15/
+## 📂 Repository Contents
 
-Teaching Assistants:
+This repository includes:
+- 📁 **Assignments**: Problem-solving exercises and programming tasks.
+- 📁 **Projects**: Hands-on projects implementing big data analytics techniques.
+- 📁 **Notes**: Lecture summaries and important takeaways.
 
-Guojun Wu (Email: gwu@wpi.edu)
-Huimin Ren (Email: hren@wpi.edu)
-Office Hours:
+## 🧑‍🏫 Course Instructor
 
-Prof. Yanhua Li: Tuesdays and Thursdays, 10:00 am - 11:00 am; others by appointment
-TAs: Wednesdays and Thursdays, 2:00 pm - 3:00 pm; others by appointment
-For more detailed information about the course, please visit the course webpage.
+**Prof. Yanhua Li**  
+- **Office**: AK130  
+- **Email**: [yli15@wpi.edu](mailto:yli15@wpi.edu)  
+- **Website**: [http://wpi.edu/~yli15/](http://wpi.edu/~yli15/)  
+
+## 🎓 Teaching Assistants
+
+- **Guojun Wu** ([gwu@wpi.edu](mailto:gwu@wpi.edu))
+- **Huimin Ren** ([hren@wpi.edu](mailto:hren@wpi.edu))
+
+## 📅 Office Hours
+
+- **Prof. Yanhua Li**:  
+  - Tuesdays & Thursdays: 10:00 AM - 11:00 AM  
+  - Additional by appointment
+
+- **Teaching Assistants**:  
+  - Wednesdays & Thursdays: 2:00 PM - 3:00 PM  
+  - Additional by appointment
+
+## 🛠 Technologies Used
+- Python (Pandas, NumPy, Scikit-Learn, TensorFlow, PyTorch)
+- SQL for data management
+- Hadoop & Spark for large-scale data processing
+- Jupyter Notebooks for analysis and visualization
+
