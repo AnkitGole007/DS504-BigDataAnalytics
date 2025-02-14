@@ -10,17 +10,6 @@ key = GITHUB_APY_KEY
 headers ={
       'Authorization': key,
     }
-# collect data by users API
-# id_ = 0
-# response = requests.get('https://api.github.com/users?since='+str(id_),headers=headers)
-# data = response.json()
-#
-# # collect data by search API
-# # response = requests.get('https://api.github.com/search/users?q=created:>=2025-01-22&sort=joined&order=desc',headers=headers)
-# # data = response.json()
-#
-# json_formatted_str = json.dumps(data, indent=2)
-# print(json_formatted_str)
 
 def fetch_users(id, count):
     response = requests.get(f'https://api.github.com/users?since={id}&per_page={count}', headers=headers)
@@ -31,18 +20,36 @@ def fetch_users(id, count):
         print(f"Error {response.status_code}: {response.text}")
         return []
 
+def check_rate_limit():
+    """Check GitHub API rate limit and sleep if needed."""
+    url = "https://api.github.com/rate_limit"
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        rate_data = response.json()
+        remaining = rate_data['rate']['remaining']
+        reset_time = rate_data['rate']['reset']
+
+        if remaining == 0:
+            sleep_time = reset_time - time.time()
+            if sleep_time > 0:
+                print(f"Rate limit exceeded. Sleeping for {int(sleep_time)} seconds.")
+                time.sleep(sleep_time)
+
 def sampling_users(start_id, end_id, num_samples):
     return random.sample(range(start_id,end_id), num_samples)
 
-def valid_users(sampled_users):
+def valid_users(sampled_users, data):
     valid_users = 0
-    for uid in sampled_users:
-        response = requests.get(f'https://api.github.com/user/{uid}')
+    fetched_ids = {user['id'] for user in data}
 
-        if response.status_code == 200:
+    for uid in sampled_users:
+        check_rate_limit()
+        if uid in fetched_ids:
             valid_users += 1
-        elif response.status_code == 404:
-            pass
+        else:
+            response = requests.get(f'https://api.github.com/user/{uid}', headers=headers)
+            if response.status_code == 200:
+                valid_users += 1
 
         time.sleep(1)
 
@@ -56,35 +63,38 @@ def estimate_valid_users(sampled_users, valid, total_ids):
 
 def evaluate_unbiasedness(runs=10, num_samples=50, total_ids=10000):
     estimates = []
+    data = fetch_users(0, 100)  # Fetch sample data before running tests
 
     for _ in range(runs):
         sampled_ids = sampling_users(1, total_ids, num_samples)
-        valid_count = valid_users(sampled_ids)
+        valid_count = valid_users(sampled_ids, data)  # Pass data here
         estimated_users = estimate_valid_users(sampled_ids, valid_count, total_ids)
         estimates.append(estimated_users)
 
-    # Plot the results
-    plt.figure(figsize=(10, 5))
-    plt.scatter(range(runs), estimates, label="Estimates")
-    plt.axhline(y=sum(estimates) / len(estimates), color='r', linestyle='--', label="Average Estimate")
-    plt.xlabel("Run")
-    plt.ylabel("Estimated Users")
-    plt.title("Unbiasedness of the Estimator")
+    # Box plot visualization
+    plt.figure(figsize=(10, 6))
+    plt.boxplot(estimates, patch_artist=True,
+                boxprops=dict(color="blue"), medianprops=dict(color="red"),
+                flierprops=dict(marker='o', color='red', alpha=0.5))
+    plt.axhline(y=sum(estimates) / len(estimates), color='blue', linestyle='-', label="True Estimated Count")
+    plt.xlabel("Run Number")
+    plt.ylabel("Estimated Number of GitHub Users")
+    plt.title("Box Plot of Estimated GitHub User Count")
     plt.legend()
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
     plt.show()
 
+
 def main():
-    data = fetch_users(0,100)
+    data = fetch_users(0, 100)
     print(json.dumps(data, indent=2))
 
-    # Select a small known range (1-10,000)
+    sample_size = min(500, len(data))  # Dynamically adjust sample size
+    sampled_ids = sampling_users(1, 10000, sample_size)
+    print(sampled_ids)
 
-    sampled_ids = sampling_users(1, 10000, 50)
+    valid_count = valid_users(sampled_ids, data)
 
-    # Get valid users from the sample
-    valid_count = valid_users(sampled_ids)
-
-    # Estimate total valid users
     estimated_users = estimate_valid_users(sampled_ids, valid_count, total_ids=10000)
     print(f"Estimated valid users in range 1-10,000: {estimated_users}")
     evaluate_unbiasedness()
